@@ -489,6 +489,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5403539900830524736, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403539900830524736, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
+      propertyPath: field of view
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403539900830524736, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
+      propertyPath: near clip plane
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403539900830524736, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
+      propertyPath: orthographic size
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403539900830524737, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5403539901536420865, guid: 5c5e5a2baf36ce54aa8982e8958ce2b1, type: 3}
       propertyPath: m_RootOrder
       value: 2
