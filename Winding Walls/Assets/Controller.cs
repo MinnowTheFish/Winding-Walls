@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-    public CharacterController _CharacterController;
-    public Camera Cam;
-    public Light FlashLight, BodyLight;
     public bool FlashLightOn {
         get { return _FlashLightOn; }
         set {
@@ -15,32 +12,68 @@ public class Controller : MonoBehaviour
             BodyLight.gameObject.SetActive(!value);
         }
     }
-    private bool _FlashLightOn = false;
+    public bool MenuOpen {
+        get { return _MenuOpen; }
+        set {
+            _MenuOpen = value;
+            Menu.gameObject.SetActive(value);
+            if (value) Cursor.lockState = CursorLockMode.None;
+            else Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+    public bool SettingsOpen {
+        get { return _SettingsOpen; }
+        set {
+            _SettingsOpen = value;
+            Settings.gameObject.SetActive(value);
+            if (value) MenuOpen = false;
+            if (value) Cursor.lockState = CursorLockMode.None;
+            else Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+    private bool _FlashLightOn, _MenuOpen, _SettingsOpen;
+    public Canvas Menu, Settings;
+    public Camera Cam;
+    public CharacterController _CharacterController;
     public float speed = 6, gravityScale = 1;
+    private float VerticalVelocity;
+    public Light FlashLight, BodyLight;
     public Vector2 CamLimit, MouseSensitivity;
 
-    private float VerticalVelocity;
 
     // Start is called before the first frame update
     void Start()
     {
+        MenuOpen = false;
+        FlashLightOn = false;
+        SettingsOpen = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Menu")) {
+            if (SettingsOpen) {
+                SettingsOpen = false;
+                MenuOpen = true;
+            }
+            else MenuOpen = !MenuOpen;
+        }
+
+        if (MenuOpen || SettingsOpen) return;
+
         if (Input.GetButtonDown("Toggle Flashlight")) 
             FlashLightOn = !FlashLightOn;
 
         // Movement
-        Vector3 move = transform.forward * Mathf.Clamp(Input.GetAxis("Joystick Forwards") + Input.GetAxis("Forwards"), -1, 1) // Backwards/Forwards movement
-                     + transform.right * Mathf.Clamp(Input.GetAxis("Joystick Sideways") + Input.GetAxis("Sideways"), -1, 1); // Left/Right movement
+        Vector3 move = transform.forward * Input.GetAxis("Vertical") // Backwards/Forwards movement
+                     + transform.right * Input.GetAxis("Horizontal"); // Left/Right movement
         _CharacterController.Move(speed * Time.deltaTime * move); // Move the CharacterController by the product of move, change in time, and the character speed
 
         // Camera Rotation
-        transform.Rotate(0, Mathf.Clamp(Input.GetAxis("Mouse X") + Input.GetAxis("Joystick Look X"), -1, 1) * MouseSensitivity.x, 0); // Rotate the camera horizontally
-        Cam.transform.Rotate(-Mathf.Clamp(Input.GetAxis("Mouse Y") + Input.GetAxis("Joystick Look Y"), -1, 1) * MouseSensitivity.y, 0, 0); // Rotate the camera vertically
+        transform.Rotate(0, Input.GetAxis("Mouse X") * MouseSensitivity.x, 0); // Rotate the camera horizontally
+        Cam.transform.Rotate(-Input.GetAxis("Mouse Y") * MouseSensitivity.y, 0, 0); // Rotate the camera vertically
 
         // Limiting the vertical camera rotation
         Vector3 currentRotation = Cam.transform.localEulerAngles;
@@ -64,8 +97,13 @@ public class Controller : MonoBehaviour
     public void Death() {
         _CharacterController.transform.position = new Vector3(0, 0, 11.5f);
         VerticalVelocity = 0;
-        _CharacterController.transform.rotation = Quaternion.Euler(Vector3.zero);
-        Cam.transform.rotation = Quaternion.Euler(Vector3.zero);
+        _CharacterController.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+        Cam.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
         FlashLightOn = false;
+        MenuOpen = false;
     }
+
+    // public void OpenSettings() {
+    //     SettingsOpen = true;
+    // }
 }
