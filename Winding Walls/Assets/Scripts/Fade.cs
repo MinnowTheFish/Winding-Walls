@@ -46,8 +46,8 @@ public class Fade : MonoBehaviour
             gameObject.GetComponent<Image>().color = objectColor;
             yield return null;
         }
-
-        SceneManager.LoadScene(sceneName);
+        if (sceneName != "")
+            SceneManager.LoadScene(sceneName);
     }
 
     private IEnumerator FadeOutEnumerator() {
